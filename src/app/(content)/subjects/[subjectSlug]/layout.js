@@ -18,7 +18,7 @@ const query = gql`
 
 const queryCategory = gql`
   query {
-    categories {
+    categories(sort: "id:desc") {
       data {
         attributes {
           Name
