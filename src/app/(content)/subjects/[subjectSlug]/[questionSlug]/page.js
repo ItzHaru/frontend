@@ -1,12 +1,14 @@
 "use client";
 
 import { gql, useQuery, useMutation } from "@apollo/client";
+import { useState, useRef } from "react";
+import { FaRegPlusSquare } from "react-icons/fa";
 
 const createNewSource = gql`
   mutation (
     $name: String!
     $userId: String!
-    $files: Upload!
+    $file: Upload!
     $categoriesId: [String]!
     $questionId: String!
   ) {
@@ -17,6 +19,7 @@ const createNewSource = gql`
         publishedAt: "2007-12-03T10:15:30Z"
         categories: $categoriesId
         question: $questionId
+        Files: $file
       }
     ) {
       data {
@@ -32,6 +35,19 @@ const query = gql`
       data {
         attributes {
           Slug
+        }
+      }
+    }
+  }
+`;
+
+const GET_CATEGORIES = gql`
+  query {
+    categories {
+      data {
+        id
+        attributes {
+          Name
         }
       }
     }
@@ -66,17 +82,30 @@ const getQuestionDetailsQuery = gql`
 `;
 
 export default function Page({ params }) {
+  const [file, setFile] = useState(undefined);
+  const dialogRef = useRef(null);
+
   const { data, loading } = useQuery(getQuestionDetailsQuery, {
     variables: { slug: params.questionSlug },
   });
 
   const { data: mutationData } = useMutation(createNewSource, {
-    variables: { slug: params.questionSlug },
+    variables: { name: file },
   });
 
+  const { data: categoriesData } = useQuery(GET_CATEGORIES);
+
+  console.log(categoriesData);
+
+  function onFileAddClick(e) {
+    if (dialogRef === null) return;
+    dialogRef.current.showModal();
+  }
+
   function onFileUpload(e) {
-    const file = e.target.files;
+    const file = e.target.files[0];
     console.log(file, e);
+    setFile(file);
   }
 
   if (loading) {
@@ -85,59 +114,96 @@ export default function Page({ params }) {
 
   return (
     <div>
-      {data && (
-        <div className="p-6">
-          {data.questions.data.map((question) => {
-            return (
-              <div key={question.slug} className="px-5">
-                <h3 className="text-[#E2E8F0] text-3xl mb-2">
-                  {question.attributes.Name}
-                </h3>
-                {question.attributes.subquestions.data.map((item, index) => {
-                  return (
-                    <ul key={index} className="list-disc pl-5">
-                      <li>{item.attributes.Name}</li>
-                    </ul>
-                  );
-                })}
-                {question.attributes.tasks.data.length > 0 && (
-                  <h2 className="text-[#E2E8F0] text-xl mt-10 mb-2">
-                    Praktické úkoly
-                  </h2>
-                )}
+      <dialog ref={dialogRef} className="relative w-full bg-transparent">
+        <form className="max-w-[600px] mx-auto rounded-lg shadow-md p-4 bg-slate-100">
+          <input
+            onInput={(e) => console.log(e.target.files[0])}
+            type="file"
+            name="zdroj-ucitelu"
+            accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          />
+          <select name="category" id="category">
+            <option selected disabled>
+              Select category
+            </option>
+            {categoriesData !== undefined &&
+              categoriesData.categories.data.map((item) => {
+                <option key={item.id} value={item.attributes.Name}>
+                  {item.attributes.Name}
+                </option>;
+              })}
+          </select>
+          {categoriesData !== undefined &&
+            categoriesData.categories.data.map((item) => {
+              <div key={item.id} value={item.attributes.Name}>
+                {item.attributes.Name}
+              </div>;
+            })}
+        </form>
+      </dialog>
+      <div>
+        {data && (
+          <div className="p-6">
+            {data.questions.data.map((question) => {
+              return (
+                <div key={question.slug} className="px-5">
+                  <h3 className="text-[#E2E8F0] text-3xl mb-2">
+                    {question.attributes.Name}
+                  </h3>
+                  {question.attributes.subquestions.data.map((item, index) => {
+                    return (
+                      <ul key={index} className="list-disc pl-5">
+                        <li>{item.attributes.Name}</li>
+                      </ul>
+                    );
+                  })}
+                  {question.attributes.tasks.data.length > 0 && (
+                    <h2 className="text-[#E2E8F0] text-xl mt-10 mb-2">
+                      Praktické úkoly
+                    </h2>
+                  )}
 
-                {question.attributes.tasks.data.map((item, index) => {
-                  return (
-                    <ul key={index} className="list-disc pl-5">
-                      <li>{item.attributes.Name}</li>
-                    </ul>
-                  );
-                })}
-                <h2 className="text-[#E2E8F0] text-xl mt-10 mb-2">
-                  Zdroje učitelů:
-                </h2>
-                <form>
-                  <input
-                    type="file"
-                    name="zdroj-ucitelu"
-                    accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                  />
-                </form>
-                <h2 className="text-[#E2E8F0] text-xl mt-10 mb-2">
-                  Moje zdroje:
-                </h2>
-                <form>
-                  <input
-                    type="file"
-                    name="moje-zdroje"
-                    onInput={onFileUpload}
-                  />
-                </form>
-              </div>
-            );
-          })}
-        </div>
-      )}
+                  {question.attributes.tasks.data.map((item, index) => {
+                    return (
+                      <ul key={index} className="list-disc pl-5">
+                        <li>{item.attributes.Name}</li>
+                      </ul>
+                    );
+                  })}
+                  <h2 className="text-[#E2E8F0] text-xl mt-10 mb-2">
+                    Zdroje učitelů:
+                  </h2>
+                  <button
+                    type="button"
+                    className="flex items-center gap-2"
+                    onClick={onFileAddClick}
+                  >
+                    <FaRegPlusSquare /> Přidat soubor
+                  </button>
+                  <form>
+                    <input
+                      onInput={(e) => console.log(e.target.files[0])}
+                      type="file"
+                      name="zdroj-ucitelu"
+                      accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    />
+                  </form>
+                  <h2 className="text-[#E2E8F0] text-xl mt-10 mb-2">
+                    Moje zdroje:
+                  </h2>
+                  <form>
+                    <input
+                      type="file"
+                      name="moje-zdroje"
+                      onInput={onFileUpload}
+                    />
+                  </form>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
