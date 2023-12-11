@@ -180,14 +180,6 @@ export default function Page({ params }) {
                   >
                     <FaRegPlusSquare /> Přidat soubor
                   </button>
-                  <form>
-                    <input
-                      onInput={(e) => console.log(e.target.files[0])}
-                      type="file"
-                      name="zdroj-ucitelu"
-                      accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                    />
-                  </form>
                   <h2 className="text-[#E2E8F0] text-xl mt-10 mb-2">
                     Moje zdroje:
                   </h2>
