@@ -9,8 +9,8 @@ const createNewSource = gql`
     $name: String!
     $userId: String!
     $file: Upload!
-    $categoriesId: [String]!
-    $questionId: String!
+    $categoriesId: [ID]!
+    $questionId: ID
   ) {
     createSource(
       data: {
@@ -22,6 +22,16 @@ const createNewSource = gql`
         Files: $file
       }
     ) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+const uploadFile = gql`
+  mutation ($file: Upload!) {
+    upload(file: $file) {
       data {
         id
       }
@@ -83,6 +93,7 @@ const getQuestionDetailsQuery = gql`
 
 export default function Page({ params }) {
   const [file, setFile] = useState(undefined);
+  const [selectedCategory, setSelectedCategory] = useState(undefined);
   const dialogRef = useRef(null);
 
   const { data, loading } = useQuery(getQuestionDetailsQuery, {
@@ -92,6 +103,8 @@ export default function Page({ params }) {
   const { data: mutationData } = useMutation(createNewSource, {
     variables: { name: file },
   });
+
+  const [upload] = useMutation(uploadFile);
 
   const { data: categoriesData } = useQuery(GET_CATEGORIES);
 
@@ -108,6 +121,23 @@ export default function Page({ params }) {
     setFile(file);
   }
 
+  function onFileSubmit(e) {
+    if (!file || !selectedCategory) return;
+    const data = upload({
+      variables: {
+        file: file,
+      },
+    });
+    console.log(data);
+    // variables: {
+    //   name: file.name,
+    //   userId:
+    //   file: file
+    //   categoriesId: selectedCategory.id
+    //   questionId: ID
+    // }
+  }
+
   if (loading) {
     return <p>Loading your data ...</p>;
   }
@@ -122,15 +152,27 @@ export default function Page({ params }) {
             name="zdroj-ucitelu"
             accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
           />
-          <select name="category" id="category">
+          <select
+            name="category"
+            id="category"
+            onChange={(e) => {
+              const category = categoriesData.categories.data.find(
+                (item) => item.attributes.Name === e.target.value
+              );
+              if (!category) return;
+              setSelectedCategory(category);
+            }}
+          >
             <option selected disabled>
               Select category
             </option>
             {categoriesData !== undefined &&
               categoriesData.categories.data.map((item) => {
-                <option key={item.id} value={item.attributes.Name}>
-                  {item.attributes.Name}
-                </option>;
+                return (
+                  <option key={item.id} value={item.attributes.Name}>
+                    {item.attributes.Name}
+                  </option>
+                );
               })}
           </select>
           {categoriesData !== undefined &&
@@ -139,6 +181,10 @@ export default function Page({ params }) {
                 {item.attributes.Name}
               </div>;
             })}
+
+          <button type="button" onClick={onFileSubmit}>
+            Submit
+          </button>
         </form>
       </dialog>
       <div>
