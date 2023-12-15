@@ -1,7 +1,7 @@
 "use client";
 
 import { gql, useQuery, useMutation } from "@apollo/client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FaRegPlusSquare } from "react-icons/fa";
 
 const createNewSource = gql`
@@ -92,9 +92,10 @@ const getQuestionDetailsQuery = gql`
 `;
 
 export default function Page({ params }) {
-  const [file, setFile] = useState(undefined);
-  const [selectedCategory, setSelectedCategory] = useState(undefined);
   const dialogRef = useRef(null);
+  const fileImportRef = useRef(null);
+  const [file, setFile] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const { data, loading } = useQuery(getQuestionDetailsQuery, {
     variables: { slug: params.questionSlug },
@@ -103,6 +104,10 @@ export default function Page({ params }) {
   const { data: mutationData } = useMutation(createNewSource, {
     variables: { name: file },
   });
+
+  useEffect(() => {
+    console.log(file);
+  }, [file]);
 
   const [upload] = useMutation(uploadFile);
 
@@ -116,13 +121,14 @@ export default function Page({ params }) {
   }
 
   function onFileUpload(e) {
-    const file = e.target.files[0];
-    console.log(file, e);
-    setFile(file);
+    const file1 = e.target.files[0];
+    setFile(file1);
   }
 
-  function onFileSubmit(e) {
+  async function onFileSubmit(e) {
+    console.log(file, selectedCategory);
     if (!file || !selectedCategory) return;
+    console.log(fileImportRef.current.files[0]);
     const data = upload({
       variables: {
         file: file,
@@ -147,7 +153,8 @@ export default function Page({ params }) {
       <dialog ref={dialogRef} className="relative w-full bg-transparent">
         <form className="max-w-[600px] mx-auto rounded-lg shadow-md p-4 bg-slate-100">
           <input
-            onInput={(e) => console.log(e.target.files[0])}
+            ref={fileImportRef}
+            onInput={(e) => onFileUpload(e)}
             type="file"
             name="zdroj-ucitelu"
             accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -181,7 +188,6 @@ export default function Page({ params }) {
                 {item.attributes.Name}
               </div>;
             })}
-
           <button type="button" onClick={onFileSubmit}>
             Submit
           </button>
