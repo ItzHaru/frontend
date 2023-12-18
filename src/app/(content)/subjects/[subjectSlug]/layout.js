@@ -124,6 +124,8 @@ export default async function Layout({ children, params }) {
     };
   });
   const categories = subjects[0].categories;
+  let order = 0;
+
   return (
     <div className="bg-[#27293f] grid grid-cols-12 h-full">
       <aside className="col-span-3 flex flex-col gap-1 bg-[#1f2132] px-10 pb-5">
@@ -136,6 +138,7 @@ export default async function Layout({ children, params }) {
             >
               <div className="border-l-4 mt-3 border-[#323349] px-4 flex flex-col gap-1">
                 {category.questions.map((question, index) => {
+                  order++;
                   return (
                     <Link
                       key={question.slug}
@@ -143,7 +146,7 @@ export default async function Layout({ children, params }) {
                         "/subjects/" + params.subjectSlug + "/" + question.slug
                       }
                     >
-                      {index + 1}. {question.name}
+                      {order}. {question.name}
                     </Link>
                   );
                 })}
