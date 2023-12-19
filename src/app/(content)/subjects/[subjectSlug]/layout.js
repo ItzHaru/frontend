@@ -18,7 +18,7 @@ const query = gql`
 
 const queryCategory = gql`
   query {
-    categories(sort: "id:desc") {
+    categories(sort: "id:asc") {
       data {
         attributes {
           Name
@@ -82,7 +82,6 @@ export async function generateStaticParams() {
   const client = getClient();
   const { data } = await client.query({
     query: query,
-    // fetchPolicy: "no-cache",
   });
 
   return data.subjects.data.map((subject) => {
@@ -99,11 +98,11 @@ export default async function Layout({ children, params }) {
   const { data } = await client.query({
     query: queryCategory,
   });
+
   const { data: data2 } = await client.query({
     query: getSubjectDetailsQuery,
     variables: { slug: params.subjectSlug },
   });
-  console.log("results", data2.subjects.data[0].attributes.categories);
   const subjects = data2.subjects.data.map((subject) => {
     return {
       slug: subject.attributes.Slug,
@@ -123,9 +122,12 @@ export default async function Layout({ children, params }) {
       ),
     };
   });
-  const categories = subjects[0].categories;
-  let order = 0;
 
+  const categories = subjects[0].categories;
+  let order = 0; /* 
+categories.map((category) => {
+  console.log(category.name);
+}); */
   return (
     <div className="bg-[#27293f] grid grid-cols-12 h-full">
       <aside className="col-span-3 flex flex-col gap-1 bg-[#1f2132] px-10 pb-5">
@@ -137,7 +139,7 @@ export default async function Layout({ children, params }) {
               url={category.logo}
             >
               <div className="border-l-4 mt-3 border-[#323349] px-4 flex flex-col gap-1">
-                {category.questions.map((question, index) => {
+                {category.questions.map((question) => {
                   order++;
                   return (
                     <Link

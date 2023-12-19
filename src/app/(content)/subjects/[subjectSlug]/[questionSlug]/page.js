@@ -235,13 +235,13 @@ export default function Page({ params }) {
                   <h2 className="text-[#E2E8F0] text-xl mt-10 mb-2">
                     Moje zdroje:
                   </h2>
-                  <form>
-                    <input
-                      type="file"
-                      name="moje-zdroje"
-                      onInput={onFileUpload}
-                    />
-                  </form>
+                  <button
+                    type="button"
+                    className="flex items-center gap-2"
+                    onClick={onFileAddClick}
+                  >
+                    <FaRegPlusSquare /> Přidat soubor
+                  </button>
                 </div>
               );
             })}

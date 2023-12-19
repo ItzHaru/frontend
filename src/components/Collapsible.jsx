@@ -10,12 +10,13 @@ export default function Collapsible({ title, children, url }) {
     setIsOpened((old) => !old);
   }
 
+  console.log(title);
   return (
     <div>
       <button
         onClick={toggleCollapsible}
         type="button"
-        className="rounded-xl px-5 py-2 mt-5 flex justify-between w-full bg-[#323349] text-[#e2e8f0] border-4 border-[#171926]"
+        className="rounded-xl px-5 py-2 mt-5 flex justify-between w-full bg-[#323349] text-[#e2e8f0] border-4 border-[#171926] font-medium"
       >
         {title}
         <Image

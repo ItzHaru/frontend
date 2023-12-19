@@ -51,10 +51,6 @@ export default async function Page({ params }) {
     query: getSubjectDetailsQuery,
     variables: { slug: params.subjectSlug },
   });
-  console.log(data.subjects.data);
-  data.subjects.data.map((subject) => {
-    console.log(subject);
-  });
 
   return (
     <div>
