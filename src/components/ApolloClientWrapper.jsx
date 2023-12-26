@@ -1,6 +1,7 @@
 "use client";
 
 import { ApolloLink, HttpLink } from "@apollo/client";
+import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 import {
   ApolloNextAppProvider,
   NextSSRInMemoryCache,
@@ -9,7 +10,7 @@ import {
 } from "@apollo/experimental-nextjs-app-support/ssr";
 
 function makeClient() {
-  const httpLink = new HttpLink({
+  const httpLink = createUploadLink({
     uri: "http://localhost:1337/graphql",
   });
 

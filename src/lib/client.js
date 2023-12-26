@@ -17,10 +17,3 @@ export const { getClient } = registerApolloClient(() => {
   apolloClient = client;
   return client;
 });
-
-export const resetApolloClient = async () => {
-  if (apolloClient) {
-    await apolloClient.resetStore();
-    // nebo použijte apolloClient.clearStore() podle potřeby
-  }
-};

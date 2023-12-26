@@ -3,6 +3,8 @@
 import { gql, useQuery, useMutation } from "@apollo/client";
 import { useState, useRef, useEffect } from "react";
 import { FaRegPlusSquare } from "react-icons/fa";
+import { useUser } from "@clerk/nextjs";
+import { data } from "autoprefixer";
 
 const createNewSource = gql`
   mutation (
@@ -68,6 +70,7 @@ const getQuestionDetailsQuery = gql`
   query Query($slug: String!) {
     questions(filters: { Slug: { eq: $slug } }) {
       data {
+        id
         attributes {
           Name
           Slug
@@ -101,15 +104,12 @@ export default function Page({ params }) {
     variables: { slug: params.questionSlug },
   });
 
-  const { data: mutationData } = useMutation(createNewSource, {
-    variables: { name: file },
-  });
-
+  const { user, isSignedIn } = useUser();
   useEffect(() => {
     console.log(file);
   }, [file]);
 
-  const [upload] = useMutation(uploadFile);
+  const [upload] = useMutation(createNewSource);
 
   const { data: categoriesData } = useQuery(GET_CATEGORIES);
 
@@ -126,22 +126,18 @@ export default function Page({ params }) {
   }
 
   async function onFileSubmit(e) {
-    console.log(file, selectedCategory);
     if (!file || !selectedCategory) return;
-    console.log(fileImportRef.current.files[0]);
+    if (!isSignedIn) return;
     const data = upload({
       variables: {
-        file: file,
+        file: fileImportRef.current.files[0],
+        name: file.name,
+        userId: user.id,
+        categoriesId: selectedCategory.id,
+        questionId: data.questions.data[0].id,
       },
     });
     console.log(data);
-    // variables: {
-    //   name: file.name,
-    //   userId:
-    //   file: file
-    //   categoriesId: selectedCategory.id
-    //   questionId: ID
-    // }
   }
 
   if (loading) {
