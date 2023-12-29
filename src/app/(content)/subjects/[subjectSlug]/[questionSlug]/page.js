@@ -4,13 +4,12 @@ import { gql, useQuery, useMutation } from "@apollo/client";
 import { useState, useRef, useEffect } from "react";
 import { FaRegPlusSquare } from "react-icons/fa";
 import { useUser } from "@clerk/nextjs";
-import { data } from "autoprefixer";
 
 const createNewSource = gql`
   mutation (
     $name: String!
     $userId: String!
-    $file: Upload!
+    $file: ID!
     $categoriesId: [ID]!
     $questionId: ID
   ) {
@@ -94,6 +93,31 @@ const getQuestionDetailsQuery = gql`
   }
 `;
 
+const getSource = gql`
+  query Query1($slug: String!) {
+    questions(filters: { Slug: { eq: $slug } }) {
+      data {
+        attributes {
+          sources {
+            data {
+              attributes {
+                Name
+                categories {
+                  data {
+                    attributes {
+                      Name
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export default function Page({ params }) {
   const dialogRef = useRef(null);
   const fileImportRef = useRef(null);
@@ -104,16 +128,32 @@ export default function Page({ params }) {
     variables: { slug: params.questionSlug },
   });
 
+  const { data: sources, loading: loadsources } = useQuery(getSource, {
+    variables: { slug: params.questionSlug },
+  });
+
+  console.log(data);
+
   const { user, isSignedIn } = useUser();
   useEffect(() => {
     console.log(file);
   }, [file]);
 
-  const [upload] = useMutation(createNewSource);
+  const [upload] = useMutation(createNewSource, { refetchQueries: ["Query1"] });
+  const [uploadFile1] = useMutation(uploadFile);
 
   const { data: categoriesData } = useQuery(GET_CATEGORIES);
 
-  console.log(categoriesData);
+  const element = document.createElement("a");
+  element.setAttribute(
+    "href",
+    "data:text/plain;charset=utf-8," + encodeURIComponent(gift.generatedGIFT)
+  );
+  element.setAttribute("download", `${test["title"]}.txt`);
+  element.style.display = "none";
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
 
   function onFileAddClick(e) {
     if (dialogRef === null) return;
@@ -128,20 +168,30 @@ export default function Page({ params }) {
   async function onFileSubmit(e) {
     if (!file || !selectedCategory) return;
     if (!isSignedIn) return;
-    const data = upload({
+    const file2 = await uploadFile1({
       variables: {
         file: fileImportRef.current.files[0],
+      },
+    });
+    const data3 = await upload({
+      variables: {
         name: file.name,
         userId: user.id,
+        file: file2.data.upload.data.id,
         categoriesId: selectedCategory.id,
         questionId: data.questions.data[0].id,
       },
     });
-    console.log(data);
+
+    console.log(data3);
   }
 
   if (loading) {
     return <p>Loading your data ...</p>;
+  }
+
+  if (loadsources) {
+    return <p>Loading sources ...</p>;
   }
 
   return (
@@ -210,7 +260,6 @@ export default function Page({ params }) {
                       Praktické úkoly
                     </h2>
                   )}
-
                   {question.attributes.tasks.data.map((item, index) => {
                     return (
                       <ul key={index} className="list-disc pl-5">
@@ -218,19 +267,18 @@ export default function Page({ params }) {
                       </ul>
                     );
                   })}
-                  <h2 className="text-[#E2E8F0] text-xl mt-10 mb-2">
-                    Zdroje učitelů:
-                  </h2>
-                  <button
-                    type="button"
-                    className="flex items-center gap-2"
-                    onClick={onFileAddClick}
-                  >
-                    <FaRegPlusSquare /> Přidat soubor
-                  </button>
-                  <h2 className="text-[#E2E8F0] text-xl mt-10 mb-2">
-                    Moje zdroje:
-                  </h2>
+                  <h2 className="text-[#E2E8F0] text-xl mt-10 mb-2">Zdroje:</h2>
+                  {sources.questions.data.map((question) => {
+                    return question.attributes.sources.data.map(
+                      (source, index) => {
+                        return (
+                          <ul key={index} className="list-disc pl-5">
+                            <li>{source.attributes.Name}</li>
+                          </ul>
+                        );
+                      }
+                    );
+                  })}
                   <button
                     type="button"
                     className="flex items-center gap-2"
