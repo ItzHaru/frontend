@@ -144,7 +144,7 @@ export default function Page({ params }) {
 
   const { data: categoriesData } = useQuery(GET_CATEGORIES);
 
-  const element = document.createElement("a");
+  /* const element = document.createElement("a");
   element.setAttribute(
     "href",
     "data:text/plain;charset=utf-8," + encodeURIComponent(gift.generatedGIFT)
@@ -153,7 +153,7 @@ export default function Page({ params }) {
   element.style.display = "none";
   document.body.appendChild(element);
   element.click();
-  document.body.removeChild(element);
+  document.body.removeChild(element); */
 
   function onFileAddClick(e) {
     if (dialogRef === null) return;
