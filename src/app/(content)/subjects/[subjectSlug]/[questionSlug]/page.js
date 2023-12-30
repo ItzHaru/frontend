@@ -100,6 +100,7 @@ const getSource = gql`
         attributes {
           sources {
             data {
+              id
               attributes {
                 Name
                 categories {
@@ -109,6 +110,25 @@ const getSource = gql`
                     }
                   }
                 }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+const urlSource = gql`
+  query ($id: [ID]!) {
+    sources(filters: { id: { in: $id } }) {
+      data {
+        id
+        attributes {
+          Files {
+            data {
+              attributes {
+                url
               }
             }
           }
@@ -132,7 +152,18 @@ export default function Page({ params }) {
     variables: { slug: params.questionSlug },
   });
 
-  console.log(data);
+  const sourcesId = sources?.questions?.data[0].attributes.sources.data.map(
+    (source) => {
+      return source.id;
+    }
+  );
+
+  const { data: urls, loading: loadurlsource } = useQuery(urlSource, {
+    variables: { id: sourcesId },
+    skip: sourcesId == undefined,
+  });
+
+  console.log(urls);
 
   const { user, isSignedIn } = useUser();
   useEffect(() => {
@@ -144,17 +175,6 @@ export default function Page({ params }) {
 
   const { data: categoriesData } = useQuery(GET_CATEGORIES);
 
-  /* const element = document.createElement("a");
-  element.setAttribute(
-    "href",
-    "data:text/plain;charset=utf-8," + encodeURIComponent(gift.generatedGIFT)
-  );
-  element.setAttribute("download", `${test["title"]}.txt`);
-  element.style.display = "none";
-  document.body.appendChild(element);
-  element.click();
-  document.body.removeChild(element); */
-
   function onFileAddClick(e) {
     if (dialogRef === null) return;
     dialogRef.current.showModal();
@@ -163,6 +183,16 @@ export default function Page({ params }) {
   function onFileUpload(e) {
     const file1 = e.target.files[0];
     setFile(file1);
+  }
+
+  function downloadURI(uri, name) {
+    let link = document.createElement("a");
+    link.download = name;
+    link.href = uri;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    link.remove();
   }
 
   async function onFileSubmit(e) {
@@ -182,8 +212,6 @@ export default function Page({ params }) {
         questionId: data.questions.data[0].id,
       },
     });
-
-    console.log(data3);
   }
 
   if (loading) {
@@ -268,12 +296,21 @@ export default function Page({ params }) {
                     );
                   })}
                   <h2 className="text-[#E2E8F0] text-xl mt-10 mb-2">Zdroje:</h2>
-                  {sources.questions.data.map((question) => {
+                  {sources.questions.data.map((question, index) => {
                     return question.attributes.sources.data.map(
                       (source, index) => {
                         return (
                           <ul key={index} className="list-disc pl-5">
-                            <li>{source.attributes.Name}</li>
+                            <li
+                              onClick={() => {
+                                downloadURI(
+                                  urls[index],
+                                  source.attributes.Name
+                                );
+                              }}
+                            >
+                              {source.attributes.Name}
+                            </li>
                           </ul>
                         );
                       }
