@@ -2,6 +2,7 @@ import "./globals.css";
 import { Albert_Sans } from "next/font/google";
 import { ApolloWrapper } from "@/components/ApolloClientWrapper";
 import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 
 const albert = Albert_Sans({
   subsets: ["latin"],
@@ -15,7 +16,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+      }}
+    >
       <html lang="en">
         <body className={albert.className}>
           <ApolloWrapper>{children}</ApolloWrapper>

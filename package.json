@@ -12,6 +12,7 @@
     "@apollo/client": "^3.8.8",
     "@apollo/experimental-nextjs-app-support": "^0.4.3",
     "@clerk/nextjs": "^4.27.2",
+    "@clerk/themes": "^1.7.9",
     "apollo-upload-client": "^18.0.1",
     "graphql": "^16.8.1",
     "next": "^13.4.1",
