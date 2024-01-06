@@ -1,6 +1,6 @@
 "use client";
 
-import { gql, useQuery, useMutation } from "@apollo/client";
+import { gql, useQuery, useMutation, useLazyQuery } from "@apollo/client";
 import { useState, useRef, useEffect } from "react";
 import { FaRegPlusSquare } from "react-icons/fa";
 import { useUser } from "@clerk/nextjs";
@@ -94,11 +94,11 @@ const getQuestionDetailsQuery = gql`
 `;
 
 const getSource = gql`
-  query Query1($slug: String!) {
+  query Query1($slug: String!, $id: String!) {
     questions(filters: { Slug: { eq: $slug } }) {
       data {
         attributes {
-          sources {
+          sources(filters: { Userid: { eq: $id } }) {
             data {
               id
               attributes {
@@ -144,14 +144,24 @@ export default function Page({ params }) {
   const fileImportRef = useRef(null);
   const [file, setFile] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const { user, isSignedIn } = useUser();
 
   const { data, loading } = useQuery(getQuestionDetailsQuery, {
     variables: { slug: params.questionSlug },
   });
 
-  const { data: sources, loading: loadsources } = useQuery(getSource, {
-    variables: { slug: params.questionSlug },
-  });
+  const [getSources, { data: sources, loading: loadsources }] = useLazyQuery(
+    getSource,
+    {
+      variables: { slug: params.questionSlug, id: user.id },
+    }
+  );
+
+  useEffect(() => {
+    if (user?.id) {
+      getSources();
+    }
+  }, [user]);
 
   const sourcesId = sources?.questions?.data[0].attributes.sources.data.map(
     (source) => {
@@ -164,9 +174,6 @@ export default function Page({ params }) {
     skip: sourcesId == undefined,
   });
 
-  console.log(urls);
-
-  const { user, isSignedIn } = useUser();
   useEffect(() => {
     console.log(file);
   }, [file]);
@@ -298,7 +305,7 @@ export default function Page({ params }) {
                     );
                   })}
                   <h2 className="text-[#E2E8F0] text-xl mt-10 mb-2">Zdroje:</h2>
-                  {sources.questions.data.map((question, index) => {
+                  {sources?.questions.data.map((question, index) => {
                     return question.attributes.sources.data.map(
                       (source, index) => {
                         const tag =
