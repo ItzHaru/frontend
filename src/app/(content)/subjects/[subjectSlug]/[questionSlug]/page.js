@@ -107,6 +107,7 @@ const getSource = gql`
                   data {
                     attributes {
                       Name
+                      Color
                     }
                   }
                 }
@@ -212,6 +213,7 @@ export default function Page({ params }) {
         questionId: data.questions.data[0].id,
       },
     });
+    dialogRef.current.close();
   }
 
   if (loading) {
@@ -299,17 +301,39 @@ export default function Page({ params }) {
                   {sources.questions.data.map((question, index) => {
                     return question.attributes.sources.data.map(
                       (source, index) => {
+                        const tag =
+                          source.attributes.categories.data[0].attributes;
                         return (
                           <ul key={index} className="list-disc pl-5">
-                            <li
-                              onClick={() => {
-                                downloadURI(
-                                  urls[index],
-                                  source.attributes.Name
-                                );
-                              }}
-                            >
-                              {source.attributes.Name}
+                            <li>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  downloadURI(
+                                    urls[index],
+                                    source.attributes.Name
+                                  );
+                                }}
+                              >
+                                {source.attributes.Name}
+                              </button>
+                              <div className="ml-2 inline-flex h-8">
+                                <div
+                                  className="relative py-1 px-2 w-fit h-full text-white rounded-l-sm"
+                                  style={{ backgroundColor: tag.Color }}
+                                >
+                                  {tag.Name}
+                                </div>
+                                <div
+                                  className="h-full w-6 ml-[-1px]"
+                                  style={{
+                                    backgroundColor: tag.Color,
+                                    WebkitMaskImage:
+                                      "radial-gradient(circle at 30% center, transparent 20%, white 20%)",
+                                    clipPath: "polygon(0 0, 0 100%, 100% 50%)",
+                                  }}
+                                />
+                              </div>
                             </li>
                           </ul>
                         );
