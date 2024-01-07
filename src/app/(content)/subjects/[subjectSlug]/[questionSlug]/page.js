@@ -302,7 +302,7 @@ export default function Page({ params }) {
               return (
                 <div key={question.slug} className="px-5">
                   <h3 className="text-[#E2E8F0] text-3xl mb-2">
-                    {question.attributes.Name}
+                    {((question.id - 1) % 25) + 1}. {question.attributes.Name}
                   </h3>
                   {question.attributes.subquestions.data.map((item, index) => {
                     return (

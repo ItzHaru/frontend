@@ -1,6 +1,5 @@
 import { getClient } from "@/lib/client";
 import { gql } from "@apollo/client";
-import { Fragment } from "react";
 import Collapsible from "@/components/Collapsible.jsx";
 import Link from "next/link";
 
@@ -16,33 +15,6 @@ const query = gql`
   }
 `;
 
-const queryCategory = gql`
-  query {
-    categories(sort: "id:asc") {
-      data {
-        attributes {
-          Name
-          Logo {
-            data {
-              attributes {
-                url
-              }
-            }
-          }
-          questions(pagination: { limit: 50 }) {
-            data {
-              attributes {
-                Name
-                Slug
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
 const getSubjectDetailsQuery = gql`
   query Query($slug: String!) {
     subjects(filters: { Slug: { eq: $slug } }) {
@@ -50,7 +22,7 @@ const getSubjectDetailsQuery = gql`
         attributes {
           Slug
           Name
-          categories {
+          categories(sort: "id:asc") {
             data {
               attributes {
                 Name
@@ -95,9 +67,6 @@ export const dynamicParams = false;
 
 export default async function Layout({ children, params }) {
   const client = getClient();
-  const { data } = await client.query({
-    query: queryCategory,
-  });
 
   const { data: data2 } = await client.query({
     query: getSubjectDetailsQuery,
@@ -124,10 +93,7 @@ export default async function Layout({ children, params }) {
   });
 
   const categories = subjects[0].categories;
-  let order = 0; /* 
-categories.map((category) => {
-  console.log(category.name);
-}); */
+  let order = 0;
   return (
     <div className="bg-[#27293f] grid grid-cols-12 h-full">
       <aside className="col-span-3 flex flex-col gap-1 bg-[#1f2132] px-10 pb-5">
