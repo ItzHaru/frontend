@@ -3,6 +3,7 @@
 import { gql, useQuery, useMutation, useLazyQuery } from "@apollo/client";
 import { useState, useRef, useEffect } from "react";
 import { FaRegPlusSquare } from "react-icons/fa";
+import { RxCross2 } from "react-icons/rx";
 import { useUser } from "@clerk/nextjs";
 
 const createNewSource = gql`
@@ -33,6 +34,16 @@ const createNewSource = gql`
 const uploadFile = gql`
   mutation ($file: Upload!) {
     upload(file: $file) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+const deleteFile = gql`
+  mutation ($id: ID!) {
+    deleteSource(id: $id) {
       data {
         id
       }
@@ -84,6 +95,13 @@ const getQuestionDetailsQuery = gql`
             data {
               attributes {
                 Name
+                Img {
+                  data {
+                    attributes {
+                      url
+                    }
+                  }
+                }
               }
             }
           }
@@ -150,18 +168,19 @@ export default function Page({ params }) {
     variables: { slug: params.questionSlug },
   });
 
-  const [getSources, { data: sources, loading: loadsources }] = useLazyQuery(
-    getSource,
-    {
-      variables: { slug: params.questionSlug, id: user.id },
-    }
-  );
+  const [getSources, { data: sources, loading: loadsources }] =
+    useLazyQuery(getSource);
 
   useEffect(() => {
     if (user?.id) {
-      getSources();
+      getSources({ variables: { slug: params.questionSlug, id: user.id } });
     }
   }, [user]);
+
+  const [delFile, { data: file4, loading: loaddelfile }] = useMutation(
+    deleteFile,
+    { refetchQueries: ["Query1"] }
+  );
 
   const sourcesId = sources?.questions?.data[0].attributes.sources.data.map(
     (source) => {
@@ -301,6 +320,14 @@ export default function Page({ params }) {
                     return (
                       <ul key={index} className="list-disc pl-5">
                         <li>{item.attributes.Name}</li>
+                        {item.attributes.Img.data.map((image) => {
+                          return (
+                            <img
+                              src={`http://localhost:1337${image.attributes.url}`}
+                              alt=""
+                            />
+                          );
+                        })}
                       </ul>
                     );
                   })}
@@ -340,6 +367,14 @@ export default function Page({ params }) {
                                     clipPath: "polygon(0 0, 0 100%, 100% 50%)",
                                   }}
                                 />
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    delFile({ variables: { id: source.id } });
+                                  }}
+                                >
+                                  <RxCross2 className="ml-2 text-2xl mt-1" />
+                                </button>
                               </div>
                             </li>
                           </ul>

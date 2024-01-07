@@ -1,23 +1,12 @@
-import { getClient } from "@/lib/client";
-import { gql } from "@apollo/client";
 import Link from "next/link";
-import {
-  ClerkProvider,
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
-} from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 export default async function Home() {
-  // const client = getClient();
-  // const { data } = await client.query({ query });
-
   return (
     <main className="flex min-h-screen flex-col main">
       <div className="center">
         <p>
-          <button className="text-5xl pt-10 absolute top-0 right-10 hover:text-[#1d2048] duration-200">
+          <button className="text-3xl pt-10 absolute top-0 right-10 hover:text-[#322656] duration-200">
             <SignedIn>
               <UserButton />
             </SignedIn>
