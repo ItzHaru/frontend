@@ -320,9 +320,10 @@ export default function Page({ params }) {
                     return (
                       <ul key={index} className="list-disc pl-5">
                         <li>{item.attributes.Name}</li>
-                        {item.attributes.Img.data.map((image) => {
+                        {item.attributes.Img.data.map((image, index) => {
                           return (
                             <img
+                              key={index}
                               src={`http://localhost:1337${image.attributes.url}`}
                               alt=""
                             />
@@ -332,13 +333,16 @@ export default function Page({ params }) {
                     );
                   })}
                   <h2 className="text-[#E2E8F0] text-xl mt-10 mb-2">Zdroje:</h2>
-                  {sources?.questions.data.map((question, index) => {
+                  {sources?.questions.data.map((question) => {
                     return question.attributes.sources.data.map(
                       (source, index) => {
                         const tag =
                           source.attributes.categories.data[0].attributes;
                         return (
-                          <ul key={index} className="list-disc pl-5">
+                          <ul
+                            key={question.attributes.Name + index}
+                            className="list-disc pl-5"
+                          >
                             <li>
                               <button
                                 type="button"
