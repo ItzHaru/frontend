@@ -10,7 +10,9 @@ let apolloClient;
 export const { getClient } = registerApolloClient(() => {
   const client = new NextSSRApolloClient({
     cache: new NextSSRInMemoryCache(),
-    link: createUploadLink({ uri: "http://localhost:1337/graphql" }),
+    link: createUploadLink({
+      uri: "https://renowned-gift-126140aec8.strapiapp.com/graphql",
+    }),
   });
 
   apolloClient = client;

@@ -20,7 +20,7 @@ export default function Collapsible({ title, children, url }) {
       >
         {title}
         <Image
-          src={"http://localhost:1337" + url}
+          src={"https://renowned-gift-126140aec8.strapiapp.com" + url}
           alt="Logo"
           width={20}
           height={20}

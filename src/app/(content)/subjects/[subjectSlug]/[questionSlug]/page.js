@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { FaRegPlusSquare } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { useUser } from "@clerk/nextjs";
+import Image from "next/image";
 
 const createNewSource = gql`
   mutation (
@@ -322,9 +323,9 @@ export default function Page({ params }) {
                         <li>{item.attributes.Name}</li>
                         {item.attributes.Img.data.map((image, index) => {
                           return (
-                            <img
+                            <Image
                               key={index}
-                              src={`http://localhost:1337${image.attributes.url}`}
+                              src={`https://renowned-gift-126140aec8.strapiapp.com${image.attributes.url}`}
                               alt=""
                             />
                           );

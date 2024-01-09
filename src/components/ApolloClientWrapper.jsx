@@ -11,7 +11,7 @@ import {
 
 function makeClient() {
   const httpLink = createUploadLink({
-    uri: "http://localhost:1337/graphql",
+    uri: "https://renowned-gift-126140aec8.strapiapp.com/graphql",
   });
 
   return new NextSSRApolloClient({
