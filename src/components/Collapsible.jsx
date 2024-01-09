@@ -19,12 +19,7 @@ export default function Collapsible({ title, children, url }) {
         className="rounded-xl px-5 py-2 mt-5 flex justify-between w-full bg-[#323349] text-[#e2e8f0] border-4 border-[#171926] font-medium"
       >
         {title}
-        <Image
-          src={"https://renowned-gift-126140aec8.strapiapp.com" + url}
-          alt="Logo"
-          width={20}
-          height={20}
-        />
+        <Image src={url} alt="Logo" width={20} height={20} />
       </button>
       <div
         className={`grid duration-200`}

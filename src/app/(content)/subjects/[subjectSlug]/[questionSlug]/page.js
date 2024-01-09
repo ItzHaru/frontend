@@ -324,9 +324,12 @@ export default function Page({ params }) {
                         {item.attributes.Img.data.map((image, index) => {
                           return (
                             <Image
+                              className="pt-3"
                               key={index}
-                              src={`https://renowned-gift-126140aec8.strapiapp.com${image.attributes.url}`}
+                              src={`${image.attributes.url}`}
                               alt=""
+                              width={600}
+                              height={500}
                             />
                           );
                         })}
