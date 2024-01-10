@@ -50,20 +50,20 @@ const getSubjectDetailsQuery = gql`
   }
 `;
 
-export async function generateStaticParams() {
-  const client = getClient();
-  const { data } = await client.query({
-    query: query,
-  });
+// export async function generateStaticParams() {
+//   const client = getClient();
+//   const { data } = await client.query({
+//     query: query,
+//   });
 
-  return data.subjects.data.map((subject) => {
-    return {
-      subjectSlug: subject.attributes.Slug,
-    };
-  });
-}
+//   return data.subjects.data.map((subject) => {
+//     return {
+//       subjectSlug: subject.attributes.Slug,
+//     };
+//   });
+// }
 
-export const dynamicParams = false;
+// export const dynamicParams = false;
 
 export default async function Layout({ children, params }) {
   const client = getClient();

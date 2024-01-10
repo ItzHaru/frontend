@@ -43,7 +43,7 @@ const getSubjectDetailsQuery = gql`
 //   });
 // }
 
-export const dynamicParams = "blocking";
+// export const dynamicParams = "blocking";
 
 export default async function Page({ params }) {
   const client = getClient();
