@@ -34,7 +34,7 @@ export async function generateStaticParams() {
       };
     });
   });
-  return result;
+  return result.flat();
 }
 
 export default function Page({ params }) {
