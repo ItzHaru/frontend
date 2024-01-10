@@ -33,15 +33,15 @@ const getSubjectDetailsQuery = gql`
   }
 `;
 
-export async function generateStaticParams() {
-  const client = getClient();
-  const { data } = await client.query({ query: query });
-  return data.subjects.data.map((subject) => {
-    return {
-      subjectSlug: subject.attributes.Slug,
-    };
-  });
-}
+// export async function generateStaticParams() {
+//   const client = getClient();
+//   const { data } = await client.query({ query: query });
+//   return data.subjects.data.map((subject) => {
+//     return {
+//       subjectSlug: subject.attributes.Slug,
+//     };
+//   });
+// }
 
 export const dynamicParams = "blocking";
 
