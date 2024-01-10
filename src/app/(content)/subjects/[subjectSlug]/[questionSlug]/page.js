@@ -26,14 +26,15 @@ export const dynamicParams = "blocking";
 export async function generateStaticParams() {
   const client = getClient();
   const { data } = await client.query({ query: getSubject });
-  return data.subjects.data.map((subject) => {
-    subject.attributes.questions.data.map((question) => {
+  const result = data.subjects.data.map((subject) => {
+    return subject.attributes.questions.data.map((question) => {
       return {
         subjectSlug: subject.attributes.Slug,
         questionSlug: question.attributes.Slug,
       };
     });
   });
+  return result;
 }
 
 export default function Page({ params }) {
