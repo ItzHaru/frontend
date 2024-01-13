@@ -63,19 +63,14 @@ export default function RootLayout({ children }) {
               </Link>
             </li>
             <li className="place-content-center relative px-5 h-full">
-              <Link
-                className={`${
-                  pathname.startsWith("") ? "" : ""
-                } text-[#E2E8F0] hover:text-[#2a2d5a] grid place-content-center duration-150 text-3xl h-full`}
-                href=""
-              >
+              <div className="text-[#E2E8F0] hover:text-[#2a2d5a] grid place-content-center duration-150 text-3xl h-full">
                 <SignedIn>
                   <UserButton />
                 </SignedIn>
                 <SignedOut>
                   <SignInButton />
                 </SignedOut>
-              </Link>
+              </div>
             </li>
           </ul>
         </nav>
