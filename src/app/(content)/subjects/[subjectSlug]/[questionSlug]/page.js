@@ -1,4 +1,4 @@
-// import Content from "./Content";
+import Content from "./Content";
 import { getClient } from "@/lib/client";
 import { gql } from "@apollo/client";
 
@@ -37,10 +37,6 @@ export async function generateStaticParams() {
   return result.flat();
 }
 
-// export default function Page({ params }) {
-//   return <Content params={params} />;
-// }
-
 export default function Page({ params }) {
-  return <>beasca</>;
+  return <Content params={params} />;
 }
