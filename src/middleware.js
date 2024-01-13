@@ -11,9 +11,10 @@ export default authMiddleware({
     if (
       !auth.userId &&
       !auth.isPublicRoute &&
-      ((req.url != process.env.NODE_ENV) === "development"
-        ? "http://localhost:3000/"
-        : "https://harudolore.vercel.app")
+      req.url !=
+        (process.env.NODE_ENV === "development"
+          ? "http://localhost:3000/"
+          : "https://harudolore.vercel.app")
     ) {
       return NextResponse.redirect(
         process.env.NODE_ENV === "development"
