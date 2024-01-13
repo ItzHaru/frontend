@@ -28,13 +28,13 @@ export default async function Home() {
           <div className="flex place-content-center gap-[100px] text-3xl pt-20">
             <Link
               href="subjects/pocitacove-systemy"
-              className="whitespace-nowrap border-2 rounded-xl p-5 hover:bg-[#0f112aba] hover:shadow-lg hover:shadow-[#292b45ba] hover:scale-105 duration-300"
+              className="whitespace-nowrap border-2 rounded-xl p-5 hover:bg-[#090518d4] hover:shadow-lg hover:shadow-[#312945ba] hover:scale-105 duration-300"
             >
               Počítačové systémy
             </Link>
             <Link
               href="subjects/programove-vybaveni"
-              className="whitespace-nowrap border-2 rounded-xl p-5 hover:bg-[#0f112aba] hover:shadow-lg hover:shadow-[#292b45ba] hover:scale-105 duration-300"
+              className="whitespace-nowrap border-2 rounded-xl p-5 hover:bg-[#090518d4] hover:shadow-lg hover:shadow-[#312945ba] hover:scale-105 duration-300"
             >
               Programové vybavení
             </Link>
