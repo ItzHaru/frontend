@@ -260,7 +260,7 @@ export default function Content({ params }) {
             onInput={(e) => onFileUpload(e)}
             type="file"
             name="zdroj"
-            accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf"
+            accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf,image/jpeg,image/png,image/gif,application/zip,.c,.cpp,.h,.py,.java,.js"
           />
           <select
             name="category"

@@ -56,8 +56,8 @@ export default async function Page({ params }) {
               );
             })} */}
             <p className="m-6">
-              Pro více informací a pro možnosti ukládání souborů si vyberte
-              otázku ze sidebaru.
+              Pro více informací a pro možnosti ukládání souborů vyberte otázku
+              ze sidebaru.
             </p>
           </div>
         );
