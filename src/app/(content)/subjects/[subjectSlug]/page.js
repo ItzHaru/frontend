@@ -48,13 +48,17 @@ export default async function Page({ params }) {
             <h3 className="text-center text-[#E2E8F0] text-5xl mt-10">
               {subject.attributes.Name}
             </h3>
-            {subject.attributes.questions.data.map((question, index) => {
+            {/* {subject.attributes.questions.data.map((question, index) => {
               return (
                 <p key={index} className="pl-7">
                   {index + 1}. {question.attributes.Name}
                 </p>
               );
-            })}
+            })} */}
+            <p className="m-10">
+              Pro více informací a pro možnosti ukládání souborů si vyberte
+              otázku ze sidebaru.
+            </p>
           </div>
         );
       })}

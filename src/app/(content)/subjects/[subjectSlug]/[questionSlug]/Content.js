@@ -244,11 +244,11 @@ export default function Content({ params }) {
   }
 
   if (loading) {
-    return <p>Loading your data ...</p>;
+    return <p className="m-2">Loading your data ...</p>;
   }
 
   if (loadsources) {
-    return <p>Loading sources ...</p>;
+    return <p className="m-2">Loading sources ...</p>;
   }
 
   return (
@@ -259,7 +259,7 @@ export default function Content({ params }) {
             ref={fileImportRef}
             onInput={(e) => onFileUpload(e)}
             type="file"
-            name="zdroj-ucitelu"
+            name="zdroj"
             accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
           />
           <select
@@ -274,7 +274,7 @@ export default function Content({ params }) {
             }}
           >
             <option selected disabled>
-              Select category
+              Kategorie
             </option>
             {categoriesData !== undefined &&
               categoriesData.categories.data.map((item) => {
@@ -291,8 +291,8 @@ export default function Content({ params }) {
                 {item.attributes.Name}
               </div>;
             })}
-          <button type="button" onClick={onFileSubmit}>
-            Submit
+          <button type="button" onClick={onFileSubmit} className="m-3">
+            Přidat
           </button>
         </form>
       </dialog>
@@ -356,6 +356,7 @@ export default function Content({ params }) {
                                     source.attributes.Name
                                   );
                                 }}
+                                className="underline underline-offset-2 hover:text-[#e2e8f0] duration-100"
                               >
                                 {source.attributes.Name}
                               </button>
@@ -380,6 +381,7 @@ export default function Content({ params }) {
                                   onClick={() => {
                                     delFile({ variables: { id: source.id } });
                                   }}
+                                  className="hover:text-red-600 duration-150"
                                 >
                                   <RxCross2 className="ml-2 text-2xl mt-1" />
                                 </button>
@@ -392,7 +394,7 @@ export default function Content({ params }) {
                   })}
                   <button
                     type="button"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 mt-2 hover:text-[#e2e8f0] duration-100"
                     onClick={onFileAddClick}
                   >
                     <FaRegPlusSquare /> Přidat soubor

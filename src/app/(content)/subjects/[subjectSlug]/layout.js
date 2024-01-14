@@ -113,6 +113,7 @@ export default async function Layout({ children, params }) {
                       href={
                         "/subjects/" + params.subjectSlug + "/" + question.slug
                       }
+                      className="hover:text-[#e2e8f0]"
                     >
                       {order}. {question.name}
                     </Link>
