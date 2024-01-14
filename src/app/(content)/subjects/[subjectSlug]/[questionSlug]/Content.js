@@ -254,7 +254,7 @@ export default function Content({ params }) {
   return (
     <div>
       <dialog ref={dialogRef} className="relative w-full bg-transparent">
-        <form className="max-w-[600px] mx-auto rounded-lg shadow-md p-4 bg-slate-100">
+        <form className="relative max-w-[650px] mx-auto rounded-lg shadow-md p-4 bg-slate-100">
           <input
             ref={fileImportRef}
             onInput={(e) => onFileUpload(e)}
@@ -274,7 +274,7 @@ export default function Content({ params }) {
             }}
           >
             <option selected disabled>
-              Kategorie
+              Vyberte Kategorii
             </option>
             {categoriesData !== undefined &&
               categoriesData.categories.data.map((item) => {
@@ -293,6 +293,12 @@ export default function Content({ params }) {
             })}
           <button type="button" onClick={onFileSubmit} className="m-3">
             Přidat
+          </button>
+          <button
+            onClick={() => dialogRef.current.close()}
+            className="absolute top-0 right-0 p-2"
+          >
+            <RxCross2 className="ml-2 text-2xl mt-1 hover:text-red-600 duration-150" />
           </button>
         </form>
       </dialog>
@@ -381,9 +387,8 @@ export default function Content({ params }) {
                                   onClick={() => {
                                     delFile({ variables: { id: source.id } });
                                   }}
-                                  className="hover:text-red-600 duration-150"
                                 >
-                                  <RxCross2 className="ml-2 text-2xl mt-1" />
+                                  <RxCross2 className="ml-2 text-2xl mt-1 hover:text-red-600 duration-150" />
                                 </button>
                               </div>
                             </li>
