@@ -55,7 +55,7 @@ export default async function Page({ params }) {
                 </p>
               );
             })} */}
-            <p className="m-10">
+            <p className="m-6">
               Pro více informací a pro možnosti ukládání souborů si vyberte
               otázku ze sidebaru.
             </p>

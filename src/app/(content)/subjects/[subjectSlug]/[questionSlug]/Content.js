@@ -260,7 +260,7 @@ export default function Content({ params }) {
             onInput={(e) => onFileUpload(e)}
             type="file"
             name="zdroj"
-            accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf"
           />
           <select
             name="category"
@@ -291,7 +291,11 @@ export default function Content({ params }) {
                 {item.attributes.Name}
               </div>;
             })}
-          <button type="button" onClick={onFileSubmit} className="m-3">
+          <button
+            type="button"
+            onClick={onFileSubmit}
+            className="m-3 bg-[#333553] hover:bg-[#1c1e2d] duration-100 text-[#e2e8f0] font-bold py-1 px-3 rounded"
+          >
             Přidat
           </button>
           <button
@@ -362,7 +366,7 @@ export default function Content({ params }) {
                                     source.attributes.Name
                                   );
                                 }}
-                                className="underline underline-offset-2 hover:text-[#e2e8f0] duration-100"
+                                className="hover:underline hover:underline-offset-2 hover:text-[#e2e8f0] duration-100"
                               >
                                 {source.attributes.Name}
                               </button>
