@@ -301,6 +301,7 @@ export default function Content({ params }) {
           <button
             onClick={() => dialogRef.current.close()}
             className="absolute top-0 right-0 p-2"
+            type="button"
           >
             <RxCross2 className="ml-2 text-2xl mt-1 hover:text-red-600 duration-150" />
           </button>
